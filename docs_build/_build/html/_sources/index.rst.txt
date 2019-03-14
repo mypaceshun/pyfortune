@@ -12,7 +12,6 @@ Welcome to pyfortune's documentation!
 
    pyfortune.rst
    changelog.rst
-   modules.rst
 
 pyfortuneは某サイトへのスクレイピングを補助するツールです。
 
