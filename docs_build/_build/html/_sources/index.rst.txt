@@ -10,7 +10,9 @@ Welcome to pyfortune's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   pyfortune
+   pyfortune.rst
+   changelog.rst
+   modules.rst
 
 pyfortuneは某サイトへのスクレイピングを補助するツールです。
 

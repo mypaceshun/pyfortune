@@ -17,6 +17,8 @@
     <script type="text/javascript" src="_static/translations.js"></script>
     <link rel="index" title="索引" href="genindex.html" />
     <link rel="search" title="検索" href="search.html" />
+    <link rel="next" title="更新履歴" href="changelog.html" />
+    <link rel="prev" title="Welcome to pyfortune&#39;s documentation!" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -47,6 +49,12 @@
 </dd></dl>
 
 <dl class="exception">
+<dt id="pyfortune.exception.LoginRequireException">
+<em class="property">exception </em><code class="descclassname">pyfortune.exception.</code><code class="descname">LoginRequireException</code><a class="headerlink" href="#pyfortune.exception.LoginRequireException" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>ベースクラス: <a class="reference internal" href="#pyfortune.exception.PyfortuneException" title="pyfortune.exception.PyfortuneException"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyfortune.exception.PyfortuneException</span></code></a></p>
+</dd></dl>
+
+<dl class="exception">
 <dt id="pyfortune.exception.PyfortuneException">
 <em class="property">exception </em><code class="descclassname">pyfortune.exception.</code><code class="descname">PyfortuneException</code><a class="headerlink" href="#pyfortune.exception.PyfortuneException" title="この定義へのパーマリンク">¶</a></dt>
 <dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
@@ -60,6 +68,31 @@
 <em class="property">class </em><code class="descclassname">pyfortune.session.</code><code class="descname">Session</code><a class="headerlink" href="#pyfortune.session.Session" title="この定義へのパーマリンク">¶</a></dt>
 <dd><p>ベースクラス: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>ログインセッションを張るためのクラス</p>
+<dl class="method">
+<dt id="pyfortune.session.Session.fetch_apply_list">
+<code class="descname">fetch_apply_list</code><span class="sig-paren">(</span><em>page=None</em><span class="sig-paren">)</span><a class="headerlink" href="#pyfortune.session.Session.fetch_apply_list" title="この定義へのパーマリンク">¶</a></dt>
+<dd><p>抽選申し込み履歴の抽出</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">パラメータ:</th><td class="field-body"><strong>page</strong> (<em>int</em>) -- 申し込み履歴を抽出するpage番号、最初は0</td>
+</tr>
+<tr class="field-even field"><th class="field-name">戻り値:</th><td class="field-body">申し込み情報の辞書のリスト</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">戻り値の型:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal notranslate"><span class="pre">pyfortune.session.LoginRequireException</span></code></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">サンプル</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fetch_apply_list</span><span class="p">()</span>
+<span class="go">[&#39;link&#39;: &#39;xxx&#39;, &#39;id&#39;: &#39;xxx&#39;, &#39;date&#39;: datetime.datetime(2018, 1, 1, 1, 1, 1), &#39;total_money&#39;: 1000, &#39;event&#39;: &#39;xxx&#39;, &#39;lottery_status&#39;: &#39;xxx&#39;, &#39;lottery_result&#39;: &#39;xxx&#39;, ...]</span>
+</pre></div>
+</div>
+</dd></dl>
+
 <dl class="method">
 <dt id="pyfortune.session.Session.login">
 <code class="descname">login</code><span class="sig-paren">(</span><em>username</em>, <em>password</em><span class="sig-paren">)</span><a class="headerlink" href="#pyfortune.session.Session.login" title="この定義へのパーマリンク">¶</a></dt>
@@ -138,11 +171,24 @@
 
 
 <h3>ナビゲーション</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyfortune package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyfortune.exception">pyfortune.exception module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyfortune.session">pyfortune.session module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-pyfortune">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">更新履歴</a></li>
+</ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="前の章へ">Welcome to pyfortune's documentation!</a></li>
+      <li>Next: <a href="changelog.html" title="次の章へ">更新履歴</a></li>
   </ul></li>
 </ul>
 </div>
