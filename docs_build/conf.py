@@ -14,7 +14,7 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../../'))
+sys.path.insert(0, os.path.abspath('../'))
 
 
 # -- Project information -----------------------------------------------------
@@ -24,7 +24,7 @@ copyright = '2019, KAWAI Shun'
 author = 'KAWAI Shun'
 
 # The short X.Y version
-version = ''
+version = '0.9'
 # The full version, including alpha/beta/rc tags
 release = '0.9.1'
 
@@ -39,9 +39,9 @@ release = '0.9.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.githubpages',
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
+    'sphinx.ext.githubpages',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -66,7 +66,7 @@ language = 'ja'
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = []
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None

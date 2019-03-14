@@ -53,7 +53,7 @@ class Session():
         """ログインチェックを行う関数
 
         Returns:
-            str: `pyfortune.session.LOGIN`か`pyfortune.session.LOGOUT`が返される
+            str: pyfortune.session.LOGINかpyfortune.session.LOGOUTが返される
 
         Examples:
             >>> status()

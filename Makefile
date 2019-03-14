@@ -29,8 +29,9 @@ secrets:
 
 .PHONY: doc
 doc:
-	${ACTIVATE} && sphinx-apidoc -f -o docs/apis/ pyfortune/
-	${ACTIVATE} && cd docs/ && make html
+	${ACTIVATE} && sphinx-apidoc -f -o docs_build/ pyfortune/
+	${ACTIVATE} && cd docs_build/ && make html
+	cp -rfv docs_build/_build/html/* docs/
 
 .PHONY: test
 test: ${VENV}
