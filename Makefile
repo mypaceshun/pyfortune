@@ -27,7 +27,7 @@ secrets:
 	echo "password" >> secrets
 
 .PHONY: test
-test:
+test: ${VENV}
 	${ACTIVATE} && python -m pytest tests
 
 .PHONY: clean
