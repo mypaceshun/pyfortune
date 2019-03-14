@@ -17,22 +17,25 @@ pyfortuneは某サイトへのスクレイピングを補助するツールで�
 インストール
 ------------------------------------
 
-::
+githubからダウンロードしてきてインストールします ::
+
    $ git clone https://github.com/mypaceshun/pyfortune
    $ cd pyfortune
-   $ python setup.py install
+   $ python3 setup.py install
 
 
 クイックスタート
 ------------------------------------
 
 ログイン処理のみを行う簡単なサンプルは以下の通りです ::
+
    >>> from pyfortune.session import Session
    >>> s = Session()
    >>> s.login('username', 'password')
    'username'
 
 `status` 関数を利用することでログイン済みかどうかを確認出来ます。 ::
+
    >>> s.status()
    'login'
 

@@ -51,31 +51,27 @@
 <p>pyfortuneは某サイトへのスクレイピングを補助するツールです。</p>
 <div class="section" id="id1">
 <h2>インストール<a class="headerlink" href="#id1" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<dl class="docutils">
-<dt>::</dt>
-<dd>$ git clone <a class="reference external" href="https://github.com/mypaceshun/pyfortune">https://github.com/mypaceshun/pyfortune</a>
+<p>githubからダウンロードしてきてインストールします</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/mypaceshun/pyfortune
 $ cd pyfortune
-$ python setup.py install</dd>
-</dl>
+$ python3 setup.py install
+</pre></div>
+</div>
 </div>
 <div class="section" id="id2">
 <h2>クイックスタート<a class="headerlink" href="#id2" title="このヘッドラインへのパーマリンク">¶</a></h2>
-<dl class="docutils">
-<dt>ログイン処理のみを行う簡単なサンプルは以下の通りです ::</dt>
-<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyfortune.session</span> <span class="k">import</span> <span class="n">Session</span>
+<p>ログイン処理のみを行う簡単なサンプルは以下の通りです</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pyfortune.session</span> <span class="k">import</span> <span class="n">Session</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">)</span>
 <span class="go">&#39;username&#39;</span>
 </pre></div>
 </div>
-</dd>
-<dt><cite>status</cite> 関数を利用することでログイン済みかどうかを確認出来ます。 ::</dt>
-<dd><div class="first last highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
+<p><cite>status</cite> 関数を利用することでログイン済みかどうかを確認出来ます。</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">status</span><span class="p">()</span>
 <span class="go">&#39;login&#39;</span>
 </pre></div>
 </div>
-</dd>
-</dl>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
