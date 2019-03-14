@@ -1,0 +1,273 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pyfortune.session &#8212; pyfortune 0.9.1 ドキュメント</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script type="text/javascript" src="../../_static/translations.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="検索" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>pyfortune.session のソースコード</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="k">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span> <span class="nn">pyfortune.exception</span> <span class="k">import</span> <span class="p">(</span><span class="n">LoginFailureException</span><span class="p">,</span>
+                                 <span class="n">LoginRequireException</span><span class="p">)</span>
+
+<span class="n">LOGIN</span> <span class="o">=</span> <span class="s1">&#39;login&#39;</span>
+<span class="n">LOGOUT</span> <span class="o">=</span> <span class="s1">&#39;logout&#39;</span>
+
+<div class="viewcode-block" id="Session"><a class="viewcode-back" href="../../pyfortune.html#pyfortune.session.Session">[ドキュメント]</a><span class="k">class</span> <span class="nc">Session</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;ログインセッションを張るためのクラス</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;初期化処理を行う</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cookies</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">BASE_URL</span> <span class="o">=</span> <span class="s1">&#39;https://fortunemusic.jp/&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LOGIN_URL</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">default/login/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BASE_URL</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">APPLY_LIST_URL</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">mypage/apply_list/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BASE_URL</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_pre_cookie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;事前にTOPページにアクセスし、Cookieを取得する</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BASE_URL</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cookies</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">cookies</span>
+
+<div class="viewcode-block" id="Session.login"><a class="viewcode-back" href="../../pyfortune.html#pyfortune.session.Session.login">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;ログイン処理を行う関数</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            username (str): ユーザー名</span>
+<span class="sd">            password (str): パスワード</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: ログインに成功したユーザー名</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pyfortune.exception.LoginfailureException</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; login(&#39;username&#39;, &#39;password&#39;)</span>
+<span class="sd">            &#39;username&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pre_cookie</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;login_id&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
+                <span class="s1">&#39;login_pw&#39;</span><span class="p">:</span> <span class="n">password</span><span class="p">}</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LOGIN_URL</span><span class="p">,</span>
+                            <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+                            <span class="n">cookies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cookies</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cookies</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">cookies</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">LOGIN</span><span class="p">:</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">text</span>
+            <span class="k">raise</span> <span class="n">LoginFailureException</span><span class="p">(</span><span class="s1">&#39;Login failure&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">username</span></div>
+
+<div class="viewcode-block" id="Session.status"><a class="viewcode-back" href="../../pyfortune.html#pyfortune.session.Session.status">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;ログインチェックを行う関数</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: pyfortune.session.LOGINかpyfortune.session.LOGOUTが返される</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; status()</span>
+<span class="sd">            &#39;login&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BASE_URL</span><span class="p">,</span>
+                    <span class="n">cookies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cookies</span><span class="p">)</span>
+        <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
+        <span class="n">logout_btn</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;btn01&#39;</span><span class="p">,</span> <span class="s1">&#39;href&#39;</span><span class="p">:</span> <span class="s1">&#39;/default/logout/&#39;</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">logout_btn</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">LOGOUT</span>
+        <span class="k">return</span> <span class="n">LOGIN</span></div>
+
+<div class="viewcode-block" id="Session.fetch_apply_list"><a class="viewcode-back" href="../../pyfortune.html#pyfortune.session.Session.fetch_apply_list">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">fetch_apply_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;抽選申し込み履歴の抽出</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            page (int): 申し込み履歴を抽出するpage番号、最初は0</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: 申し込み情報の辞書のリスト</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pyfortune.session.LoginRequireException</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; fetch_apply_list()</span>
+<span class="sd">            [&#39;link&#39;: &#39;xxx&#39;, &#39;id&#39;: &#39;xxx&#39;, &#39;date&#39;: datetime.datetime(2018, 1, 1, 1, 1, 1), &#39;total_money&#39;: 1000, &#39;event&#39;: &#39;xxx&#39;, &#39;lottery_status&#39;: &#39;xxx&#39;, &#39;lottery_result&#39;: &#39;xxx&#39;, ...]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="ow">is</span> <span class="n">LOGOUT</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LoginRequireException</span><span class="p">(</span><span class="s1">&#39;Require Login&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">page</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">page</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">?page=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">APPLY_LIST_URL</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">page</span><span class="p">)),</span>
+                           <span class="n">cookies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cookies</span><span class="p">)</span>
+        <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
+        <span class="n">tbody</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;tbody&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tbody</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+        <span class="n">tr_list</span> <span class="o">=</span> <span class="n">tbody</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s1">&#39;tr&#39;</span><span class="p">)</span>
+        <span class="n">apply_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">tr_list</span><span class="p">:</span>
+            <span class="n">td_list</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
+            <span class="n">link</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">BASE_URL</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">td_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;href&#39;</span><span class="p">)</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">td_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">text</span>
+            <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">td_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="mi">4</span><span class="p">:],</span> <span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+            <span class="n">total_money</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">td_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="mi">6</span><span class="p">:][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+            <span class="n">event</span> <span class="o">=</span> <span class="n">td_list</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+            <span class="n">lottery_status</span> <span class="o">=</span> <span class="n">td_list</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
+            <span class="n">lottery_result</span> <span class="o">=</span> <span class="n">td_list</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
+            <span class="n">apply</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;link&#39;</span><span class="p">:</span> <span class="n">link</span><span class="p">,</span>
+                     <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="nb">id</span><span class="p">,</span>
+                     <span class="s1">&#39;date&#39;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
+                     <span class="s1">&#39;total_money&#39;</span><span class="p">:</span> <span class="n">total_money</span><span class="p">,</span>
+                     <span class="s1">&#39;event&#39;</span><span class="p">:</span> <span class="n">event</span><span class="p">,</span>
+                     <span class="s1">&#39;lottery_status&#39;</span><span class="p">:</span> <span class="n">lottery_status</span><span class="p">,</span>
+                     <span class="s1">&#39;lottery_result&#39;</span><span class="p">:</span> <span class="n">lottery_result</span><span class="p">,}</span>
+            <span class="n">apply_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">apply</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">apply_list</span></div>
+
+<div class="viewcode-block" id="Session.fetch_apply_detail"><a class="viewcode-back" href="../../pyfortune.html#pyfortune.session.Session.fetch_apply_detail">[ドキュメント]</a>    <span class="k">def</span> <span class="nf">fetch_apply_detail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">link</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;抽選申し込み履歴詳細を取得</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            link (str): 抽選申し込み履歴詳細を取得するURL</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: 申込み情報のリスト</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            pyfortune.session.LoginRequireException</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="ow">is</span> <span class="n">LOGOUT</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">LoginRequireException</span><span class="p">(</span><span class="s1">&#39;Require Login&#39;</span><span class="p">)</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">cookies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cookies</span><span class="p">)</span>
+        <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
+        <span class="n">tbody</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s1">&#39;tbody&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">tr_list</span> <span class="o">=</span> <span class="n">tbody</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s1">&#39;tr&#39;</span><span class="p">)</span>
+        <span class="n">detail_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># 下2行は合計金額表示と注意書き</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tr_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="n">tr</span> <span class="o">=</span> <span class="n">tr_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">td_list</span> <span class="o">=</span> <span class="n">tr</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s1">&#39;td&#39;</span><span class="p">)</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">td_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">title_left</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;【&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">title_mid</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;【&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;】&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">title_right</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;】&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">one_money</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">td_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="mi">2</span><span class="p">:][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+            <span class="n">subscription</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">td_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="mi">3</span><span class="p">:][:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">winning</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">td_list</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="mi">3</span><span class="p">:][:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">total_money</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">td_list</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="mi">10</span><span class="p">:][:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+
+            <span class="n">detail</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">title</span><span class="p">,</span>
+                      <span class="s1">&#39;title_left&#39;</span><span class="p">:</span> <span class="n">title_left</span><span class="p">,</span>
+                      <span class="s1">&#39;title_mid&#39;</span><span class="p">:</span> <span class="n">title_mid</span><span class="p">,</span>
+                      <span class="s1">&#39;title_right&#39;</span><span class="p">:</span> <span class="n">title_right</span><span class="p">,</span>
+                      <span class="s1">&#39;one_money&#39;</span><span class="p">:</span> <span class="n">one_money</span><span class="p">,</span>
+                      <span class="s1">&#39;subscription&#39;</span><span class="p">:</span> <span class="n">subscription</span><span class="p">,</span>
+                      <span class="s1">&#39;winning&#39;</span><span class="p">:</span> <span class="n">winning</span><span class="p">,</span>
+                      <span class="s1">&#39;total_money&#39;</span><span class="p">:</span> <span class="n">total_money</span>
+                      <span class="p">}</span>
+            <span class="n">detail_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">detail</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">detail_list</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">pyfortune</a></h1>
+
+
+
+
+
+
+
+
+<h3>ナビゲーション</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../pyfortune.html">pyfortune package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">更新履歴</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyfortune</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">モジュールコード</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>クイック検索</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="検索" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, KAWAI Shun.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
