@@ -130,6 +130,12 @@ class Session():
 
         Raises:
             pyfortune.session.LoginRequireException
+
+        Examples:
+            >>> apply_list = fetch_apply_list()
+            >>> link = apply_list[0]['link']
+            >>> fetch_apply_detail(link)
+            [{'title': 'xxx【xxx】xxx', 'title_left': 'xxx', 'title_mid': 'xxx', 'title_right': 'xxx', 'one_money': 1000, 'subscription': 1, 'winning': 1, 'total_money': 1000}]
         """
         if self.status() is LOGOUT:
             raise LoginRequireException('Require Login')

@@ -166,6 +166,12 @@
 
 <span class="sd">        Raises:</span>
 <span class="sd">            pyfortune.session.LoginRequireException</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; apply_list = fetch_apply_list()</span>
+<span class="sd">            &gt;&gt;&gt; link = apply_list[0][&#39;link&#39;]</span>
+<span class="sd">            &gt;&gt;&gt; fetch_apply_detail(link)</span>
+<span class="sd">            [{&#39;title&#39;: &#39;xxx【xxx】xxx&#39;, &#39;title_left&#39;: &#39;xxx&#39;, &#39;title_mid&#39;: &#39;xxx&#39;, &#39;title_right&#39;: &#39;xxx&#39;, &#39;one_money&#39;: 1000, &#39;subscription&#39;: 1, &#39;winning&#39;: 1, &#39;total_money&#39;: 1000}]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">()</span> <span class="ow">is</span> <span class="n">LOGOUT</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">LoginRequireException</span><span class="p">(</span><span class="s1">&#39;Require Login&#39;</span><span class="p">)</span>
