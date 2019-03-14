@@ -1,7 +1,6 @@
 PYTHON3		= python3
 VENV		= venv
 ACTIVATE	= . ./${VENV}/bin/activate
-WORKDIR		= _tmp
 
 .PHONY: usage
 usage:
@@ -30,11 +29,8 @@ secrets:
 
 .PHONY: doc
 doc:
-	mkdir -p ${WORKDIR}/
-	${ACTIVATE} && sphinx-apidoc -F -o ${WORKDIR}/ pyfortune/
-	${ACTIVATE} && cd ${WORKDIR}/ && make html
-	mv ${WORKDIR}/_build/html/* docs/
-	rm -rf ${WORKDIR}
+	${ACTIVATE} && sphinx-apidoc -f -o docs/apis/ pyfortune/
+	${ACTIVATE} && cd docs/ && make html
 
 .PHONY: test
 test: ${VENV}
