@@ -36,21 +36,3 @@ PyPIには登録していないしする予定もない
 >>> s.status()
 'login'
 ```
-
-## 詳細
-
-### pyfortune.session.Session
-
-ログイン等の処理を行うクラス
-
-### pyfortune.session.Session.login(username, password)
-
-ログイン処理を行う関数
-
-ログインに成功した場合はユーザー名を返す。ログインに失敗した場合は`pyfortune.exception.LoginFailureException`を返す。
-
-### pyfortune.session.Session.status()
-
-ログイン状態を確認する関数
-
-ログイン済みの場合は`'login'`を、未ログインの場合は`'logout'`を返す。
