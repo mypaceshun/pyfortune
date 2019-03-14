@@ -1,6 +1,7 @@
 PYTHON3		= python3
 VENV		= venv
 ACTIVATE	= . ./${VENV}/bin/activate
+WORKDIR		= _tmp
 
 .PHONY: usage
 usage:
@@ -8,6 +9,7 @@ usage:
 	@echo ""
 	@echo "Targets:"
 	@echo "  build-env      build venv directory"
+	@echo "  doc            build document"
 	@echo "  test           run test scripts"
 	@echo "  clean          remove venv directory"
 
@@ -25,6 +27,14 @@ ${VENV}: requirements.txt
 secrets:
 	echo "username" > secrets
 	echo "password" >> secrets
+
+.PHONY: doc
+doc:
+	mkdir -p ${WORKDIR}/
+	${ACTIVATE} && sphinx-apidoc -F -o ${WORKDIR}/ pyfortune/
+	${ACTIVATE} && cd ${WORKDIR}/ && make html
+	mv ${WORKDIR}/_build/html/* docs/
+	rm -rf ${WORKDIR}
 
 .PHONY: test
 test: ${VENV}
