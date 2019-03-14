@@ -96,11 +96,13 @@ class Session():
                            cookies=self.cookies)
         soup = BeautifulSoup(res.text, 'html.parser')
         tbody = soup.find('tbody')
+        if tbody is None:
+            return []
         tr_list = tbody.findAll('tr')
         apply_list = []
         for tr in tr_list:
             td_list = tr.findAll('td')
-            link = self.BASE_URL + td_list[0].find('a').get('href')
+            link = self.BASE_URL[:-1] + td_list[0].find('a').get('href')
             id = td_list[0].find('a').text
             date = datetime.datetime.strptime(td_list[1].text[4:], '%Y-%m-%d %H:%M:%S')
             total_money = int(td_list[2].text[6:][:-1].replace(',', ''))
@@ -116,3 +118,48 @@ class Session():
                      'lottery_result': lottery_result,}
             apply_list.append(apply)
         return apply_list
+
+    def fetch_apply_detail(self, link):
+        """抽選申し込み履歴詳細を取得
+
+        Args:
+            link (str): 抽選申し込み履歴詳細を取得するURL
+
+        Returns:
+            list: 申込み情報のリスト
+
+        Raises:
+            pyfortune.session.LoginRequireException
+        """
+        if self.status() is LOGOUT:
+            raise LoginRequireException('Require Login')
+
+        res = requests.get(link, cookies=self.cookies)
+        soup = BeautifulSoup(res.text, 'html.parser')
+        tbody = soup.findAll('tbody')[1]
+        tr_list = tbody.findAll('tr')
+        detail_list = []
+        # 下2行は合計金額表示と注意書き
+        for i in range(len(tr_list) - 2):
+            tr = tr_list[i]
+            td_list = tr.findAll('td')
+            title = td_list[0].text.strip()
+            title_left = title.split('【')[0]
+            title_mid = title.split('【')[1].split('】')[0]
+            title_right = title.split('】')[1]
+            one_money = int(td_list[1].text[2:][:-1].replace(',', ''))
+            subscription = int(td_list[2].text[3:][:-1])
+            winning = int(td_list[3].text[3:][:-1])
+            total_money = int(td_list[4].text[10:][:-1].replace(',', ''))
+
+            detail = {'title': title,
+                      'title_left': title_left,
+                      'title_mid': title_mid,
+                      'title_right': title_right,
+                      'one_money': one_money,
+                      'subscription': subscription,
+                      'winning': winning,
+                      'total_money': total_money
+                      }
+            detail_list.append(detail)
+        return detail_list
