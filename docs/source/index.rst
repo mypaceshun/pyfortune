@@ -11,7 +11,6 @@ Welcome to pyfortune's documentation!
    :caption: Contents:
 
 
-
 Indices and tables
 ==================
 
