@@ -13,6 +13,7 @@ Sphinx = "*"
 [packages]
 beautifulsoup4 = "==4.7.1"
 requests = "==2.21.0"
+py-fortune = "*"
 
 [requires]
 python_version = "3.6"
