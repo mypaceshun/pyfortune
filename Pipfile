@@ -1,0 +1,27 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+flake8 = "*"
+pytest = "*"
+sphinx-git = "*"
+twine = "*"
+Sphinx = "*"
+
+[packages]
+beautifulsoup4 = "==4.7.1"
+requests = "==2.21.0"
+
+[requires]
+python_version = "3.6"
+
+[scripts]
+test = "make test VENV= ACTIVATE=:"
+test_all = "make test_all VENV= ACTIVATE=:"
+doc = "make doc ACTIVATE=:"
+clean = "make clean VENV="
+build = "make build ACTIVATE=:"
+upload_test = "make upload ACTIVATE=:"
+upload = "make upload ACTIVATE=: TARGET=pypi"
