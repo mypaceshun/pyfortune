@@ -68,11 +68,14 @@
 <p>ログインセッションを張るためのクラス</p>
 <dl class="method">
 <dt id="pyfortune.session.Session.fetch_apply_detail">
-<code class="sig-name descname">fetch_apply_detail</code><span class="sig-paren">(</span><em class="sig-param">link</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfortune/session.html#Session.fetch_apply_detail"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#pyfortune.session.Session.fetch_apply_detail" title="この定義へのパーマリンク">¶</a></dt>
+<code class="sig-name descname">fetch_apply_detail</code><span class="sig-paren">(</span><em class="sig-param">link</em>, <em class="sig-param">parse=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyfortune/session.html#Session.fetch_apply_detail"><span class="viewcode-link">[ソース]</span></a><a class="headerlink" href="#pyfortune.session.Session.fetch_apply_detail" title="この定義へのパーマリンク">¶</a></dt>
 <dd><p>抽選申し込み履歴詳細を取得</p>
 <dl class="field-list simple">
 <dt class="field-odd">パラメータ</dt>
-<dd class="field-odd"><p><strong>link</strong> (<em>str</em>) -- 抽選申し込み履歴詳細を取得するURL</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>link</strong> (<em>str</em>) -- 抽選申し込み履歴詳細を取得するURL</p></li>
+<li><p><strong>parse</strong> (<em>bool</em>) -- 取得したデータをパースする default: True</p></li>
+</ul>
 </dd>
 <dt class="field-even">戻り値</dt>
 <dd class="field-even"><p>申込み情報のリスト</p>
