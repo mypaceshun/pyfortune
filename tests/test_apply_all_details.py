@@ -1,18 +1,11 @@
 import os
 import pytest
-from pyfortune.session import Session
-from pyfortune.exception import (LoginRequireException)
+from tests.utils import get_login_session
 
 class TestFetchApplyAllDetails():
     @pytest.mark.slow
     def test_fetch_some_apply_list(self):
-        secrets_path = os.environ.get('SECRETS', 'secrets')
-        with open(secrets_path, 'r') as f:
-            lines = f.readlines()
-            username = lines[0].strip()
-            password = lines[1].strip()
-        s = Session()
-        s.login(username, password)
+        s = get_login_session()
         pagecount = 5
         all_apply_list = []
         for page in range(pagecount):
@@ -23,13 +16,7 @@ class TestFetchApplyAllDetails():
     @pytest.mark.slow
     @pytest.mark.parametrize(('page'), [p for p in range(5)])
     def test_fetch_some_detail_list(self, page):
-        secrets_path = os.environ.get('SECRETS', 'secrets')
-        with open(secrets_path, 'r') as f:
-            lines = f.readlines()
-            username = lines[0].strip()
-            password = lines[1].strip()
-        s = Session()
-        s.login(username, password)
+        s = get_login_session()
         apply_list = s.fetch_apply_list(page=page)
         all_detail_list = []
         for apply in apply_list:
