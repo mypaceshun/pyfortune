@@ -119,11 +119,12 @@ class Session():
             apply_list.append(apply)
         return apply_list
 
-    def fetch_apply_detail(self, link):
+    def fetch_apply_detail(self, link, parse=True):
         """抽選申し込み履歴詳細を取得
 
         Args:
             link (str): 抽選申し込み履歴詳細を取得するURL
+            parse (bool): 取得したデータをパースする default: True
 
         Returns:
             list: 申込み情報のリスト
@@ -144,6 +145,10 @@ class Session():
         soup = BeautifulSoup(res.text, 'html.parser')
         tbody = soup.findAll('tbody')[1]
         tr_list = tbody.findAll('tr')
+
+        if not parse:
+            return tr_list
+
         detail_list = []
         # 下2行は合計金額表示と注意書き
         for i in range(len(tr_list) - 2):
