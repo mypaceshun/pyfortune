@@ -18,11 +18,9 @@ pyfortuneは某サイトへのスクレイピングを補助するツールで�
 インストール
 ------------------------------------
 
-githubからダウンロードしてきてインストールします ::
+pipコマンドを利用してインストールします
 
-   $ git clone https://github.com/mypaceshun/pyfortune
-   $ cd pyfortune
-   $ python3 setup.py install
+   $ pip install py-fortune
 
 
 クイックスタート
