@@ -49,7 +49,7 @@ class Search():
         return search_venue_data
 
 
-    """絞り込み検索"""
+    """絞り込み検索 member:メンバー名 data:日にちx/x vetue:会場 指定がなければ検索しない ある条件での複数検索は不可(メンバー2人検索など)"""
     def search(self, member = None, data = None, venue = None):
         output_data = self.data
         if(member != None):
