@@ -48,11 +48,11 @@
         },
         "py-fortune": {
             "hashes": [
-                "sha256:624e978c6c121460d37731123f71a97ff71bce6d67c6d149e3bf4b3da120cd33",
-                "sha256:ec852426310a044e3d304a5a761004645aaee3fdc1767d37fd819ddf5d31e9d0"
+                "sha256:43a18174bc3e519f4fdbc9473a0a626fd49ee5a4a7c2cb47a2d77677ff25dcc2",
+                "sha256:ebb06c247cde3e602bfdb8341d63e4dc2258ac04d803590060c8e9e85543ef52"
             ],
             "index": "pypi",
-            "version": "==0.9.2"
+            "version": "==0.9.4"
         },
         "requests": {
             "hashes": [
