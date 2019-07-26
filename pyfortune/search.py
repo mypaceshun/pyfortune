@@ -7,7 +7,16 @@ class Search():
     def __init__(self, username, password, group = None, number = None):
         s = Session()
         s.login(username, password)
-
+        data_list = []
+        flag = True
+        page = 0
+        while flag == False:
+            add_data = s.fetch_apply_list(page)
+            if not add_data:
+                flag = False
+            else:
+                data_list.append(add_data)
+                page += 1
         data_list = s.fetch_apply_list()
         link_list = pd.io.json.json_normalize(data_list)
         link_list = link_list[link_list["lottery_result"] != "落選"]
@@ -59,3 +68,9 @@ class Search():
         if(venue != None):
             output_data = self.search_data(output_data, venue)
         return output_data
+
+    
+    """過去の枚数の累計"""
+    def sum_sheets(self, member):
+        data = self.search(member)
+        return data["winning"].sum()
