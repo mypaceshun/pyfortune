@@ -12,6 +12,8 @@ usage:
 	@echo "  doc            build document"
 	@echo "  test           run test scripts"
 	@echo "  test_all       run all test VerySlow!!"
+	@echo "  lint           run flake8"
+	@echo "  format         run autopep8"
 	@echo "  clean          remove venv directory"
 	@echo ""
 	@echo "  build          build package"
@@ -47,6 +49,14 @@ test: ${VENV}
 .PHONY: test_all
 test_all: ${VENV}
 	${ACTIVATE} && python -m pytest tests
+
+.PHONY: lint
+lint: ${VENV}
+	${ACTIVATE} && flake8 --count pyfortune || :
+
+.PHONY: format
+format: ${VENV}
+	${ACTIVATE} && autopep8 -ir pyfortune
 
 .PHONY: clean
 clean:

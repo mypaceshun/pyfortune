@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 flake8 = "*"
+autopep8 = "*"
 pytest = "*"
 sphinx-git = "*"
 twine = "*"
@@ -26,3 +27,5 @@ clean = "make clean VENV="
 build = "make build ACTIVATE=:"
 upload_test = "make upload ACTIVATE=:"
 upload = "make upload ACTIVATE=: TARGET=pypi"
+lint = "make lint ACTIVATE=: VENV="
+format = "make format ACTIVATE=: VENV="

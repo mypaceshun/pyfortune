@@ -7,9 +7,11 @@ from pyfortune.exception import (LoginFailureException,
 LOGIN = 'login'
 LOGOUT = 'logout'
 
+
 class Session():
     """ログインセッションを張るためのクラス
     """
+
     def __init__(self):
         """初期化処理を行う
         """
@@ -64,9 +66,10 @@ class Session():
             'login'
         """
         res = requests.get(self.BASE_URL,
-                    cookies=self.cookies)
+                           cookies=self.cookies)
         soup = BeautifulSoup(res.text, 'html.parser')
-        logout_btn = soup.find('a', attrs={'class': 'btn01', 'href': '/default/logout/'})
+        logout_btn = soup.find(
+            'a', attrs={'class': 'btn01', 'href': '/default/logout/'})
         if logout_btn is None:
             return LOGOUT
         return LOGIN
@@ -104,7 +107,8 @@ class Session():
             td_list = tr.findAll('td')
             link = self.BASE_URL[:-1] + td_list[0].find('a').get('href')
             id = td_list[0].find('a').text
-            date = datetime.datetime.strptime(td_list[1].text[4:], '%Y-%m-%d %H:%M:%S')
+            date = datetime.datetime.strptime(
+                td_list[1].text[4:], '%Y-%m-%d %H:%M:%S')
             total_money = int(td_list[2].text[6:][:-1].replace(',', ''))
             event = td_list[3].text
             lottery_status = td_list[4].text[4:]
@@ -115,7 +119,7 @@ class Session():
                      'total_money': total_money,
                      'event': event,
                      'lottery_status': lottery_status,
-                     'lottery_result': lottery_result,}
+                     'lottery_result': lottery_result, }
             apply_list.append(apply)
         return apply_list
 
