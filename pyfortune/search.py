@@ -25,7 +25,7 @@ class Search():
                 link_list = link_list[link_list["event"].str.contains(group)]
             elif type(group) == list:
                 link_list_ = link_list[link_list["event"].str.contains(group[0])]
-                for i in range(len(group)):
+                for i in range(len(group)-1):
                     add_list = link_list[link_list["event"].str.contains(group[i])]
                     link_list_ = pd.concat([link_list_, add_list])
                 link_list = link_list_
