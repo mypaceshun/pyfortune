@@ -11,16 +11,8 @@ Fortune Musicをスクレイピングして情報を取得するためのライ�
 ## install command
 
 ```
-$ python3 setup.py install
+$ pip install py_fortune
 ```
-
-or
-
-```
-$ pip install .
-```
-
-PyPIには登録していないしする予定もない
 
 # Usage
 
